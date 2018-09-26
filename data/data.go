@@ -37,8 +37,8 @@ type Monitor struct {
 	IP       string `gorm:"type:varchar(32);index"`
 }
 
-// Conn 连接数据库
-func Conn() (*gorm.DB, error) {
+// Connect 连接数据库
+func Connect() (*gorm.DB, error) {
 	db, err := gorm.Open("sqlite3", "monitor.db")
 	if err != nil {
 		return nil, err

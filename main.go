@@ -13,17 +13,7 @@ import (
 
 const (
 	version         = "1.0"
-	CPUDefaultRefresh = 3 // 以秒为单位的默认刷新CPU间隔
 )
-
-var (
-	interval   int
-)
-
-func init() {
-	flag.IntVar(&interval, "interval", 30, "Get data interval time(second)")
-	flag.Usage = usage
-}
 
 // 命令行处理
 func usage() {
@@ -36,19 +26,16 @@ Options:
 }
 
 func main() {
-	// t1 := time.Now()
+	
+	var interval = flag.Int("interval", 30, "Get data interval time(second)")
+	flag.Usage = usage
 
 	flag.Parse()
 	log.SetPrefix("top: ")
 	log.SetFlags(0)
 
-	// interval = conf.Interval
-	// if interval == 0 {
-	// 	interval = DEFAULT_REFRESH
-	// }
-
 	// 连接数据库
-	db, err := data.Conn()
+	db, err := data.Connect()
 	if err != nil {
 		panic(err)
 	}
@@ -58,6 +45,7 @@ func main() {
 	db.Find(&assetsList)
 
 	for {
+		t1 := time.Now()
 		var wg sync.WaitGroup
 		for _, assets := range assetsList {
 			wg.Add(1)
@@ -72,9 +60,9 @@ func main() {
 			}(assets.UserName, assets.IP, assets.PrivateKey, assets.Port)
 		}
 		wg.Wait()
-		fmt.Println("Get data success.")
-		time.Sleep(time.Second * time.Duration(interval))
-	}
 
-	// fmt.Println(time.Since(t1))
+		fmt.Println("Get data success.")
+		fmt.Println(time.Since(t1))
+		time.Sleep(time.Second * time.Duration(*interval))
+	}
 }
