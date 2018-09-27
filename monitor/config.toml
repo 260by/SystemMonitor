@@ -9,8 +9,6 @@ driver = "sqlite3"
 dsn = "../monitor.db"
 # xorm是否显示SQL
 showSQL = true
-# xorm同步数据库结构
-migrate = false
 
 # http服务配置
 [httpServer]

@@ -39,7 +39,7 @@ Options:
 func main() {
 	var configFile = flag.String("config", "config.toml", "Configration file")
 	// var interval = flag.Int("interval", 30, "Get data interval time(second)")
-	// var migrate = flag.Bool("migrate", false, "Sync database table structure")
+	var migrate = flag.Bool("migrate", false, "Sync database table structure")
 	flag.Usage = usage
 
 	flag.Parse()
@@ -52,7 +52,7 @@ func main() {
 		panic(err)
 	}
 
-	if config.Database.Migrate {
+	if *migrate {
 		orm, err := data.Connect(config.Database.Driver, config.Database.Dsn, config.Database.ShowSQL)
 		if err != nil {
 			panic(err)
