@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 	"bytes"
+	"regexp"
 )
 
 type FSInfo struct {
@@ -64,6 +65,7 @@ type Stats struct {
 	FSInfos      []FSInfo
 	NetIntf      map[string]NetIntfInfo
 	CPU          CPUInfo // or []CPUInfo to get all the cpu-core's stats?
+	CPUUse		 float64
 }
 
 func GetAllStats(client *ssh.Client, stats *Stats) {
@@ -324,7 +326,29 @@ func parseCPUFields(fields []string, stat *CPURaw) {
 // the CPU stats that were fetched last time round
 // var preCPU cpuRaw
 
-func GetCPU(client *ssh.Client, stats *Stats, preCPU CPURaw, interval int) (err error) {
+func GetCPU(client *ssh.Client, stats *Stats) (err error) {
+	stdout, err := runCommand(client, "/usr/bin/top -bn 1 -i -c")
+	if err != nil {
+		return
+	}
+
+	scanner := bufio.NewScanner(strings.NewReader(stdout))
+	for scanner.Scan() {
+		line := scanner.Text()
+		fields := strings.Fields(line)
+		if len(fields) > 0 && ( fields[0] == "Cpu(s):" || fields[0] == "%Cpu(s):" ) {
+			cpu := strings.Split(line, ",")
+			idle := regexp.MustCompile(`\d+.\d+`).FindAllString(cpu[3], -1)[0]
+			i, _ := strconv.ParseFloat(idle, 32)
+			use := (100 - i) / 100
+			stats.CPUUse = use
+		}
+	}
+
+	return nil
+}
+
+func oldGetCPU(client *ssh.Client, stats *Stats, preCPU CPURaw, interval int) (err error) {
 START:
 	lines, err := runCommand(client, "/bin/cat /proc/stat")
 	if err != nil {
@@ -385,3 +409,4 @@ func runCommand(client *ssh.Client, cmd string) (stdout string, err error) {
 	stdout = string(stdoutBuf.Bytes())
 	return
 }
+

@@ -1,0 +1,20 @@
+# 获取监控数据间隔时间，单位为秒
+interval = 30
+
+# 数据库配置
+[database]
+# 数据库驱动，如: mysql, sqlite3, postgresql, mssql等
+driver = "sqlite3"
+# 连接字符串 例: root:password@tcp(192.168.1.86:3306)/dbName?charset=utf8mb4
+dsn = "../monitor.db"
+# xorm是否显示SQL
+showSQL = true
+# xorm同步数据库结构
+migrate = false
+
+# http服务配置
+[httpServer]
+# http服务监听地址
+ip = "0.0.0.0"
+# http服务监听端口
+port = 8080

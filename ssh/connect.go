@@ -5,6 +5,7 @@ import (
 	// "io/ioutil"
 	"time"
 	"strconv"
+	// "fmt"
 )
 
 // Connect ssh连接，返回ssh client, authentication长度大于100判断为使用SSH私钥认证
@@ -16,8 +17,10 @@ func Connect(user, host string, port int, authentication string) (client *ssh.Cl
 		if err != nil {
 			return nil, err
 		}
+		// fmt.Printf("Public Key Used. %s\n", host)
 		auth = append(auth, ssh.PublicKeys(signer))
 	} else {
+		// fmt.Printf("Password Used. %s\n", host)
 		auth = append(auth, ssh.Password(authentication))
 	}
 	
