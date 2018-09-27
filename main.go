@@ -12,13 +12,13 @@ import (
 )
 
 const (
-	version         = "1.0"
+	version         = "0.1"
 )
 
 // 命令行处理
 func usage() {
-	fmt.Fprintf(os.Stderr, `rtop Version %s
-Usage: rtop options
+	fmt.Fprintf(os.Stderr, `monitor Version %s
+Usage: monitor options
 
 Options:
 `, version)
@@ -26,12 +26,11 @@ Options:
 }
 
 func main() {
-	
 	var interval = flag.Int("interval", 30, "Get data interval time(second)")
 	flag.Usage = usage
 
 	flag.Parse()
-	log.SetPrefix("top: ")
+	log.SetPrefix("monitor: ")
 	log.SetFlags(0)
 
 	// 连接数据库
@@ -65,4 +64,5 @@ func main() {
 		fmt.Println(time.Since(t1))
 		time.Sleep(time.Second * time.Duration(*interval))
 	}
+
 }
