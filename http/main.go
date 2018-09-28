@@ -74,9 +74,10 @@ func initAdminUser() (*data.User, error) {
 	return user, nil
 }
 
-func authentication(ctx iris.Context) (auth bool, err error) {
+func authentication(ctx iris.Context) (auth bool, user string, err error) {
 	s := sess.Start(ctx)
 	auth, _ = s.GetBoolean("authenticated")
+	user = s.GetString("userName")
 	if err != nil {
 		return
 	}
@@ -156,6 +157,7 @@ func main()  {
 
 		if username == user.UserName && result {
 			s := sess.Start(ctx)
+			s.Set("userName", user.UserName)
 			s.Set("authenticated", true)
 			ctx.Redirect("/admin")
 		} else {
@@ -166,7 +168,7 @@ func main()  {
 	})
 
 	app.Get("/admin", func(ctx iris.Context)  {
-		auth, err := authentication(ctx) // 认证函数，验证是否认证，认证成功获取用户ID
+		auth, user, err := authentication(ctx) // 认证函数，验证是否认证，认证成功获取用户ID
 		if !auth {
 			ctx.StatusCode(iris.StatusUnauthorized)
 			return
@@ -176,7 +178,7 @@ func main()  {
 		}
 		
 		
-		// ctx.ViewData("noteBookInfos", noteBookInfos)
+		ctx.ViewData("user", user)
 		ctx.View("admin.html")
 	})
 
