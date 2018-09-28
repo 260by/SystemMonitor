@@ -1,0 +1,29 @@
+[
+    {
+        "menuID": 1,
+        "name": "监控管理",
+        "controller": "#",
+        "child": [
+            {"menuID": 1, "pMenuID": 1, "name": "主机监控", "controller": "test.html"},
+            {"menuID": 2, "pMenuID": 1, "name": "Web监控", "controller": "test.html"},
+            {"menuID": 3, "pMenuID": 1, "name": "Redis监控", "controller": "test.html"},
+            {"menuID": 4, "pMenuID": 1, "name": "数据库监控", "controller": "/usr/name"}
+        ]
+    },
+    {
+        "menuID": 2,
+        "name": "主机管理",
+        "controller": "#",
+        "child": [
+            {"menuID": 5, "pMenuID": 2, "name": "服务器列表", "controller": "test.html"}
+        ]
+    },
+    {
+        "menuID": 3,
+        "name": "用户管理",
+        "controller": "#",
+        "child": [
+            {"menuID": 6, "pMenuID": 3, "name": "用户列表", "controller": "test.html"}
+        ]
+    }
+]

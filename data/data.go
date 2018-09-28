@@ -15,7 +15,7 @@ import (
 // User 用户数据表
 type User struct {
 	ID       int    `xorm:"pk autoincr notnull"`
-	UserName     string `xorm:"varchar(32) notnull index"`
+	UserName     string `xorm:"varchar(32) notnull unique index"`
 	Password string `xorm:"varchar(128) notnull"`
 }
 
